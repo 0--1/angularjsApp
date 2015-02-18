@@ -7,8 +7,7 @@
  * # CONFIG
  * Constant in the emergencyApp.
  */
-angular.module('emergencyApp')
-.constant('CONFIG', {
+angular.module('emergencyApp').constant('CONFIG', {
 	'api': {
 		'projects': '/'
 	}
