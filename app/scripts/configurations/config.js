@@ -8,4 +8,8 @@
  * Constant in the emergencyApp.
  */
 angular.module('emergencyApp')
-  .constant('CONFIG', 42);
+.constant('CONFIG', {
+	'api': {
+		'projects': '/'
+	}
+});
