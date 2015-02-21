@@ -1,31 +1,29 @@
 <?php
-$url = explode('/', trim($_REQUEST['_url'], '/'));
-// print_r($url);
-$method = $_SERVER['REQUEST_METHOD'];
-//check data for null
-$data = json_decode(file_get_contents("php://input"), true);
-
-if($url[0] != 'api' && $url[1] != 'pronto') {
-    exit();
+foreach (glob("inc/*.php") as $filename) {
+	include $filename;
 }
 
 function __autoload($class_name) {
-    include 'models/' . $class_name . '.php';
+	include 'models/' . $class_name . '.php';
 }
 
-$apis = array('human' =>  'Human',
-    'robot' => 'Robot');
+
+$url = explode('/', trim($_REQUEST['_url'], '/'));
+$method = $_SERVER['REQUEST_METHOD'];
+$data = json_decode(file_get_contents("php://input"), true);
 
 header('Content-Type: application/json');
-// http_response_code(403);
-// echo json_encode($apis, JSON_PRETTY_PRINT);
-// error class
+
+if($url[0] != 'api' || $url[1] != 'pronto') {
+	new Error('NOT_FOUND');
+	exit();
+}
+
 if(array_key_exists($url[2], $apis)) {
-    $process = new $apis[$url[2]](array_slice($url, 3), $method, $data);
+	$process = new $apis[$url[2]](array_slice($url, 3), $method, $data);
 } else {
-    http_response_code(404);
-    echo 'error!';
-    exit();
+	new Error('NOT_FOUND');
+	exit();
 }
 
 echo "\nbye";
