@@ -11,6 +11,7 @@ function __autoload($class_name) {
 $url = explode('/', trim($_REQUEST['_url'], '/'));
 $method = $_SERVER['REQUEST_METHOD'];
 $data = json_decode(file_get_contents("php://input"), true);
+$db = new Database();
 
 header('Content-Type: application/json');
 
@@ -20,7 +21,7 @@ if($url[0] != 'api' || $url[1] != 'pronto') {
 }
 
 if(array_key_exists($url[2], $apis)) {
-	$process = new $apis[$url[2]](array_slice($url, 3), $method, $data);
+	$process = new $apis[$url[2]](array_slice($url, 3), $method, $data, $db);
 } else {
 	new Error('NOT_FOUND');
 	exit();
