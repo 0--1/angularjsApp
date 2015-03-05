@@ -21,14 +21,18 @@ class Database {
 		$result = $this->database->query($query);
 
 		if($result) {
-			while ($row = $result->fetch_assoc()) {
-				$output[] = $row;
+			if(!is_bool($result)) {
+				while ($row = $result->fetch_assoc()) {
+					$output[] = $row;
+				}
+			} else {
+				return $result;
 			}
 		} else {
 			new Error('INTERNAL_ERROR', 'Database query execution failed : (' . $this->database->errno . ') ' . $this->database->error);
 		}
 
-		return json_encode($output, JSON_PRETTY_PRINT);
+		return $output;
 	}
 
 	public function insert($query) {
