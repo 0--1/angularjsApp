@@ -47,8 +47,8 @@ class User {
 		$id = null;
 		if(isset($_id)) {
 			$id = $_id;
-		} else if(isset($data['user_id'])) {
-			$id = $data['user_id'];
+		} else if(isset($this->url[0])) {
+			$id = $this->url[0];
 		} else {
 			new Error('NOT_FOUND', 'No user id is provided.');
 		}

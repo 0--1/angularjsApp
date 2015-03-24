@@ -47,7 +47,17 @@ class Authenticate {
 		setcookie('email', $this->email, $expiration);
 	}
 
-	public function verifyUser() {}
+	public function validateLogin() {
+		$query = "SELECT user_id FROM auth_key WHERE ckey='".$_COOKIE['ckey']."' AND hkey='".$_COOKIE['hkey']."'";
+		$result = $this->db->execute($query);
+		if($result[0]['user_id'] == $_COOKIE['user_id']) {
+			return true;
+		} else {
+			return false;
+		}
+		print_r($result);
+		return false;
+	}
 }
 
 ?>
