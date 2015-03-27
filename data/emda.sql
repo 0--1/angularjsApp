@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Generation Time: Feb 21, 2015 at 01:48 AM
+-- Generation Time: Mar 27, 2015 at 12:35 AM
 -- Server version: 5.6.17-debug-log
 -- PHP Version: 5.6.0
 
@@ -42,9 +42,43 @@ CREATE TABLE IF NOT EXISTS `access_type` (
 
 DROP TABLE IF EXISTS `auth_info`;
 CREATE TABLE IF NOT EXISTS `auth_info` (
-`user_id` int(10) unsigned NOT NULL,
-  `hash` varchar(128) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+`user_id` mediumint(10) unsigned NOT NULL,
+  `hash` char(128) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=21 ;
+
+--
+-- Dumping data for table `auth_info`
+--
+
+INSERT INTO `auth_info` (`user_id`, `hash`) VALUES
+(20, '68a966ae95ff7dbe35228dcf989ebca5bff3ab9cdce21123966f156c323d86ad08b26fa64b1beff33d40d1a08464a5b041560632efbf692c5b061f0feafd58e7');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_key`
+--
+
+DROP TABLE IF EXISTS `auth_key`;
+CREATE TABLE IF NOT EXISTS `auth_key` (
+  `user_id` mediumint(8) unsigned NOT NULL,
+  `ckey` char(128) COLLATE utf8_unicode_ci NOT NULL,
+  `hkey` char(128) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_log`
+--
+
+DROP TABLE IF EXISTS `auth_log`;
+CREATE TABLE IF NOT EXISTS `auth_log` (
+  `user_id` mediumint(8) unsigned NOT NULL,
+  `ckey` char(128) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` char(1) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -337,11 +371,18 @@ CREATE TABLE IF NOT EXISTS `user` (
   `middlename` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `lastname` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `birthdate` date NOT NULL,
+  `birthdate` date DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `delete_timestamp` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=21 ;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `user_type_id`, `firstname`, `middlename`, `lastname`, `email`, `birthdate`, `timestamp`, `deleted`, `delete_timestamp`) VALUES
+(20, 1, 'Behrooz', '', 'Kamali', 'behroozkamali@yahoo.com', '1985-09-20', '2015-03-05 04:35:52', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -353,7 +394,17 @@ DROP TABLE IF EXISTS `user_type`;
 CREATE TABLE IF NOT EXISTS `user_type` (
 `user_type_id` tinyint(3) unsigned NOT NULL,
   `title` varchar(32) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `user_type`
+--
+
+INSERT INTO `user_type` (`user_type_id`, `title`) VALUES
+(1, 'Administrator'),
+(2, 'Manager'),
+(3, 'Director'),
+(4, 'Physician');
 
 -- --------------------------------------------------------
 
@@ -383,6 +434,18 @@ ALTER TABLE `access_type`
 --
 ALTER TABLE `auth_info`
  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `auth_key`
+--
+ALTER TABLE `auth_key`
+ ADD PRIMARY KEY (`user_id`,`ckey`,`hkey`), ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `auth_log`
+--
+ALTER TABLE `auth_log`
+ ADD PRIMARY KEY (`user_id`,`ckey`,`timestamp`);
 
 --
 -- Indexes for table `bed_type`
@@ -529,7 +592,7 @@ MODIFY `access_type_id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `auth_info`
 --
 ALTER TABLE `auth_info`
-MODIFY `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+MODIFY `user_id` mediumint(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `bed_type`
 --
@@ -584,12 +647,12 @@ MODIFY `scenario_type_id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCRE
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-MODIFY `user_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT;
+MODIFY `user_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `user_type`
 --
 ALTER TABLE `user_type`
-MODIFY `user_type_id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT;
+MODIFY `user_type_id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `vehicle_type`
 --
@@ -598,6 +661,18 @@ MODIFY `vehicle_type_id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `auth_info`
+--
+ALTER TABLE `auth_info`
+ADD CONSTRAINT `auth_info_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+
+--
+-- Constraints for table `auth_key`
+--
+ALTER TABLE `auth_key`
+ADD CONSTRAINT `auth_key_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
 -- Constraints for table `emergency`
