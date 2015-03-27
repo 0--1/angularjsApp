@@ -10,7 +10,7 @@ class Logout {
 
 	function __construct($_url, $_method, $_data, $_db) {
 		$this->url = $_url;
-		$this->method = strtolower($_method);
+		$this->method = $_method;
 		$this->data = $_data;
 		$this->db = $_db;
 
@@ -23,6 +23,8 @@ class Logout {
 	}
 
 	private function logout() {
+		$query = "INSERT INTO auth_log (user_id, ckey, timestamp, type) VALUES (".$_COOKIE['user_id'].", '".$_COOKIE['ckey']."', NOW(), 'o')";
+		$result = $this->db->execute($query);
 		$query = "DELETE FROM $this->table WHERE user_id='".$_COOKIE['user_id']."' AND hkey='".$_COOKIE['hkey']."' AND ckey='".$_COOKIE['ckey']."'";
 		$result = $this->db->execute($query);
 		unset($_COOKIE['ckey']);

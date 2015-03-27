@@ -23,7 +23,7 @@ class User {
 
 	function __construct($_url, $_method, $_data, $_db) {
 		$this->url = $_url;
-		$this->method = strtolower($_method);
+		$this->method = $_method;
 		$this->data = $_data;
 		$this->db = $_db;
 

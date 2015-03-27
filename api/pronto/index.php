@@ -4,10 +4,10 @@ foreach (glob("inc/*.php") as $filename) {
 }
 
 $url = explode('/', trim($_REQUEST['_url'], '/'));
-$method = $_SERVER['REQUEST_METHOD'];
+$method = strtolower($_SERVER['REQUEST_METHOD']);
 $data = json_decode(file_get_contents("php://input"), true);
 $db = new Database();
-$auth = new Authenticate($db);
+$auth = new Authenticate($method, $db);
 
 header('Content-Type: application/json');
 
@@ -15,7 +15,9 @@ if($url[0] !== 'api' || $url[1] !== 'pronto' && isset($url[3])) {
 	new Error('NOT_FOUND');
 } else {
 	if($auth->validateLogin()) {
-		if(array_key_exists($url[2], $apis)) {
+		if($url[2] === 'login' && !isset($url[3])) {
+			echo 'redirect';
+		} else if(array_key_exists($url[2], $apis)) {
 			$process = new $apis[$url[2]](array_slice($url, 3), $method, $data, $db);
 		} else {
 			new Error('NOT_FOUND');
@@ -26,6 +28,4 @@ if($url[0] !== 'api' || $url[1] !== 'pronto' && isset($url[3])) {
 		new Error('UNAUTH', 'Invalid authentication');
 	}
 }
-
-echo "\nbye";
 ?>

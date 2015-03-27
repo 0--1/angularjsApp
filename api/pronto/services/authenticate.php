@@ -1,22 +1,28 @@
 <?php
 
 class Authenticate {
+	private $method;
 	private $db;
 	private $email;
 
-	function __construct($_db) {
+	function __construct($_method, $_db) {
+		$this->method = $_method;
 		$this->db = $_db;
 	}
 
 	public function login($email, $pass, $db) {
-		$this->email = $email;
-		$query = "SELECT user.user_id FROM user, auth_info WHERE user.user_id=auth_info.user_id AND email='$email' AND hash='" . hash('sha512', $pass) . "'";
-		$result = $this->db->execute($query);
+		if($this->method === 'post') {
+			$this->email = $email;
+			$query = "SELECT user.user_id FROM user, auth_info WHERE user.user_id=auth_info.user_id AND email='$email' AND hash='" . hash('sha512', $pass) . "'";
+			$result = $this->db->execute($query);
 
-		if(isset($result[0]['user_id'])) {
-			$this->setKey($result[0]['user_id']);
+			if(isset($result[0]['user_id'])) {
+				$this->setKey($result[0]['user_id']);
+			} else {
+				new Error('UNAUTH', 'Invalid authentication');
+			}
 		} else {
-			new Error('UNAUTH', 'Invalid authentication');
+			new Error('NOT_FOUND');
 		}
 	}
 
@@ -45,18 +51,20 @@ class Authenticate {
 		setcookie('hkey', $hkey, $expiration);
 		setcookie('user_id', $user_id, $expiration);
 		setcookie('email', $this->email, $expiration);
+
+		$query = "INSERT INTO auth_log (user_id, ckey, timestamp, type) VALUES ($user_id, '$ckey', NOW(), 'i')";
+		$result = $this->db->execute($query);
+		return true;
 	}
 
 	public function validateLogin() {
-		$query = "SELECT user_id FROM auth_key WHERE ckey='".$_COOKIE['ckey']."' AND hkey='".$_COOKIE['hkey']."'";
-		$result = $this->db->execute($query);
-		if($result[0]['user_id'] == $_COOKIE['user_id']) {
-			return true;
+		if(isset($_COOKIE['user_id']) && isset($_COOKIE['ckey']) && isset($_COOKIE['hkey'])) {
+			$query = "SELECT user_id FROM auth_key WHERE ckey='".$_COOKIE['ckey']."' AND hkey='".$_COOKIE['hkey']."'";
+			$result = $this->db->execute($query);
+			return $result[0]['user_id'] == $_COOKIE['user_id'];
 		} else {
 			return false;
 		}
-		print_r($result);
-		return false;
 	}
 }
 
