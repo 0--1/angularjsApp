@@ -10,6 +10,7 @@
 		<!-- bower:css -->
 		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
 		<link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
+		<link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
 		<!-- endbower -->
 		<!-- endbuild -->
 		<!-- build:css(.tmp) styles/main.css -->
@@ -27,6 +28,8 @@
 		<div class="container">
 			<div ng-view=""></div>
 		</div>
+
+		<section ui-view></section>
 
 		<ng-include src="'views/footer.html'"></ng-include>
 
@@ -55,6 +58,8 @@
 		<script src="bower_components/angular-touch/angular-touch.js"></script>
 		<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+		<script src="bower_components/angular-aria/angular-aria.js"></script>
+		<script src="bower_components/angular-material/angular-material.js"></script>
 		<!-- endbower -->
 		<!-- endbuild -->
 

@@ -8,6 +8,13 @@
  * Service in the emergencyApp.
  */
 angular.module('emergencyApp')
-  .service('routes', function () {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-  });
+  .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+  	$urlRouterProvider.otherwise('/');
+
+  	$stateProvider
+  		.state('main', {
+  			url: '/main',
+  			templateUrl: 'views/main.html',
+  			controller: 'MainCtrl'
+  		});
+  }]);
