@@ -5,14 +5,17 @@ foreach (glob("inc/*.php") as $filename) {
 
 header('Access-Control-Allow-Headers: Content-Type,AUTH_USER,AUTH_PW,UID,CKEY,HKEY');
 header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:9000');
 header("Access-Control-Allow-Credentials: true");
 header('Content-Type: application/json');
 
-if($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit;
+// $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+// fwrite($myfile, json_encode($_COOKIE, JSON_PRETTY_PRINT));
+
 
 $url = explode('/', trim($_REQUEST['_url'], '/'));
 $method = strtolower($_SERVER['REQUEST_METHOD']);
+if(!in_array($method, $methods)) exit();
 $data = json_decode(file_get_contents("php://input"), true);
 $db = new Database();
 $auth = new Authenticate($method, $db);
@@ -38,4 +41,6 @@ if($url[0] !== 'api' || $url[1] !== 'pronto' && isset($url[3])) {
 		new Error('UNAUTH', 'Invalid authentication');
 	}
 }
+
+exit();
 ?>

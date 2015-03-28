@@ -55,7 +55,7 @@ class User {
 
 		$query = QueryGenerator::select($id, $this->structure, $this->table);
 		$result = $this->db->execute($query);
-		print_r($result);
+		echo json_encode($result[0]);
 	}
 }
 

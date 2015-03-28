@@ -55,10 +55,10 @@ class Authenticate {
 	}
 
 	public function validateLogin() {
-		if(isset($_SERVER['HTTP_UID']) && isset($_SERVER['HTTP_CKEY']) && isset($_SERVER['HTTP_HKEY'])) {
-			$query = "SELECT user_id FROM auth_key WHERE ckey='".$_SERVER['HTTP_CKEY']."' AND hkey='".$_SERVER['HTTP_HKEY']."'";
+		if(isset($_COOKIE['uid']) && isset($_COOKIE['ckey']) && isset($_COOKIE['hkey'])) {
+			$query = "SELECT user_id FROM auth_key WHERE ckey='".$_COOKIE['ckey']."' AND hkey='".$_COOKIE['hkey']."'";
 			$result = $this->db->execute($query);
-			return $result[0]['user_id'] == $_SERVER['HTTP_UID'];
+			return ($result[0]['user_id'] == $_COOKIE['uid'] && !empty($_COOKIE['uid']));
 		} else {
 			return false;
 		}
