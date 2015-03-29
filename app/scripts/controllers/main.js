@@ -1,32 +1,25 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name emergencyApp.controller:MainCtrl
- * @description
- * # MainCtrl
- * Controller of the emergencyApp
- */
-angular.module('emergencyApp')
-	.controller('MainCtrl', function ($scope, Resource, $http, $cookies) {
-		var headers = {
-				'AUTH_USER': 'behroozkamali@yahoo.com',
-				'AUTH_PW': 'kamali'
-			},
-			req = {
-				method: 'POST',
-				url: 'http://localhost:8080/pronto/api/pronto/login',
-				headers: headers
-			};
+angular.module('myApp')
+	.controller('MainCtrl', function ($scope, SERVER, CONFIG, Resource, $http, $cookies) {
+		// var headers = {
+		// 		'AUTH_USER': 'behroozkamali@yahoo.com',
+		// 		'AUTH_PW': 'kamali'
+		// 	},
+		// 	req = {
+		// 		method: 'POST',
+		// 		url: 'http://localhost:8080/pronto/api/pronto/login',
+		// 		headers: headers
+		// 	};
 
-		if(!!$cookies.uid && !!$cookies.ckey && !!$cookies.hkey) {
-			headers.UID = $cookies.uid;
-			headers.CKEY = $cookies.ckey;
-			headers.HKEY = $cookies.hkey;
-		}
+		// if(!!$cookies.uid && !!$cookies.ckey && !!$cookies.hkey) {
+		// 	headers.UID = $cookies.uid;
+		// 	headers.CKEY = $cookies.ckey;
+		// 	headers.HKEY = $cookies.hkey;
+		// }
 
-		var test = Resource('http://localhost:8080/pronto/api/pronto/user/20');
-		test.get().then(function(response) {
+		var test = new Resource(SERVER.dev + CONFIG.api.root + CONFIG.api.user);
+		test.get('', {userId: 20}).then(function(response) {
 			console.log(response);
 		}, function(error) {
 			console.log(error);

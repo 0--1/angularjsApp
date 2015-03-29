@@ -3,7 +3,7 @@
 describe('Service: events', function () {
 
   // load the service's module
-  beforeEach(module('emergencyApp'));
+  beforeEach(module('myApp'));
 
   // instantiate service
   var event;

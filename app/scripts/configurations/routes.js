@@ -1,13 +1,6 @@
 'use strict';
 
-/**
- * @ngdoc service
- * @name emergencyApp.routes
- * @description
- * # routes
- * Service in the emergencyApp.
- */
-angular.module('emergencyApp')
+angular.module('myApp')
   .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
   	$urlRouterProvider.otherwise('/');
 

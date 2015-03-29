@@ -1,13 +1,6 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name emergencyApp.controller:AboutCtrl
- * @description
- * # AboutCtrl
- * Controller of the emergencyApp
- */
-angular.module('emergencyApp')
+angular.module('myApp')
   .controller('AboutCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

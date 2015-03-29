@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('emergencyApp').service('Resource', ['$http', '$q', function ($http, $q) {
+angular.module('myApp').service('Resource', ['$http', '$q', function ($http, $q) {
 	var Resource = function(http, q, basePath) {
 		var getPath = function (additionalPath, routeParameters) {
 				var path = additionalPath ? basePath + '/' +  additionalPath : basePath;
@@ -8,7 +8,7 @@ angular.module('emergencyApp').service('Resource', ['$http', '$q', function ($ht
 				return path;
 			},
 			replaceRouteParameters = function(routeParameters, path) {
-				routeParameters.forEach(function(element, key){
+				angular.forEach(routeParameters, function(element, key){
 					var regExp = new RegExp(':' + key);
 					path = path.replace(regExp, element);
 				});
@@ -34,8 +34,6 @@ angular.module('emergencyApp').service('Resource', ['$http', '$q', function ($ht
 			config.url = getPath.call(this, additionalPath, routeParameters);
 			config.withCredentials = true;
 			config.headers = config.headers || {};
-			// config.headers.AUTH_USER = 'behroozkamali@yahoo.com';
-			// config.headers.AUTH_PW = 'kamali';
 
 			http(config)
 				.success(deferred.resolve)

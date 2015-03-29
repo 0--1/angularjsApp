@@ -1,11 +1,5 @@
 'use strict';
 
-/**
- * @ngdoc service
- * @name emergencyApp.server
- * @description
- * # server
- * Constant in the emergencyApp.
- */
-angular.module('emergencyApp')
-  .constant('server', 42);
+angular.module('myApp').constant('SERVER', {
+	dev: 'http://localhost:8080'
+});
