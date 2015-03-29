@@ -20,18 +20,18 @@ $data = json_decode(file_get_contents("php://input"), true);
 $db = new Database();
 $auth = new Authenticate($method, $db);
 
-if($url[0] !== 'api' || $url[1] !== 'pronto' && isset($url[3])) {
+if($url[0] !== 'pronto' && isset($url[1])) {
 	new Error('NOT_FOUND');
 } else {
 	if($auth->validateLogin()) {
-		if($url[2] === 'login' && !isset($url[3])) {
+		if($url[1] === 'login' && !isset($url[2])) {
 			echo '{"status": "redirect"}';
-		} else if(array_key_exists($url[2], $apis)) {
-			$process = new $apis[$url[2]](array_slice($url, 3), $method, $data, $db);
+		} else if(array_key_exists($url[1], $apis)) {
+			$process = new $apis[$url[1]](array_slice($url, 2), $method, $data, $db);
 		} else {
 			new Error('NOT_FOUND');
 		}
-	} else if($url[2] === 'login' && !isset($url[3])) {
+	} else if($url[1] === 'login' && !isset($url[2])) {
 		if($method == 'post') {
 			$auth->login($_SERVER['HTTP_AUTH_USER'], $_SERVER['HTTP_AUTH_PW']);
 		} else {
