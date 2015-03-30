@@ -18,44 +18,53 @@ angular.module('myApp').service('Resource', ['$http', '$q', function ($http, $q)
 				return path;
 			},
 			action = function(method, routeParameters, additionalPath, data, _config) {
-			var deferred = q.defer(),
-				config = _config || {};
+				var deferred = q.defer(),
+					config = _config || {};
 
-			if(method === 'POST' || method === 'PUT') {
-				if(typeof data === 'undefined') {
-					deferred.reject({status: 'No data provided'});
-					return deferred.promise;
-				} else {
-					config.data = data;
+				if(method === 'POST' || method === 'PUT') {
+					if(typeof data === 'undefined') {
+						deferred.reject({status: 'No data provided'});
+						return deferred.promise;
+					} else {
+						config.data = data;
+					}
 				}
-			}
 
-			config.method = method;
-			config.url = getPath.call(this, additionalPath, routeParameters);
-			config.withCredentials = true;
-			config.headers = config.headers || {};
+				config.method = method;
+				config.url = getPath.call(this, additionalPath, routeParameters);
+				config.withCredentials = true;
+				config.headers = config.headers || {};
 
-			http(config)
-				.success(deferred.resolve)
-				.error(deferred.reject);
+				http(config)
+					.success(deferred.resolve)
+					.error(deferred.reject);
 
-			return deferred.promise;
-		};
+				return deferred.promise;
+			};
 
 		this.get = function(additionalPath, routeParameters, config) {
 			return action('GET', routeParameters, additionalPath, undefined, config);
 		};
 
-		this.post = function(routeParameters, additionalPath, data, config) {
+		this.post = function(additionalPath, routeParameters, data, config) {
 			return action('POST', routeParameters, additionalPath, data, config);
 		};
 
-		this.put = function(routeParameters, additionalPath, data, config) {
+		this.put = function(additionalPath, routeParameters, data, config) {
 			return action('PUT', routeParameters, additionalPath, data, config);
 		};
 
-		this.delete = function(routeParameters, additionalPath, config) {
+		this.delete = function(additionalPath, routeParameters, config) {
 			return action('DELETE', routeParameters, additionalPath, undefined, config);
+		};
+
+		this.sendResponse = function(response) {
+			return response;
+		};
+
+		this.sendError = function(error) {
+			error.error = true;
+			return error;
 		};
 	};
 
