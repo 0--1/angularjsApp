@@ -1,3 +1,3 @@
-# emergency
+# baseApp
 
-Emergency Management Decision Analytics
+Base AngularJS App
