@@ -18,22 +18,25 @@ angular.module('myApp').service('AuthModel', ['SERVER', 'CONFIG', 'Resource', '$
 				headers: headers
 			};
 
-		this.post('login', undefined, {}, config).then(
+		return this.post('login', undefined, {}, config).then(
 			function(response) {
 				if(response.ckey && response.hkey && response.uid) {
 					$cookies.ckey = response.ckey;
 					$cookies.hkey = response.hkey;
 					$cookies.uid = response.uid;
 				}
+				return response;
 			},
 			function(error) {
 				removeAuthCookies();
-				console.log(error);
+				return error;
 			}
 		);
 	};
 
 	this.logout = function() {
-		this.delete('logout', undefined, {}).then();
+		this.delete('logout', undefined, {}).then(function() {
+			removeAuthCookies();
+		});
 	};
 }]);

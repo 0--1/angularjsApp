@@ -42,6 +42,8 @@ angular.module('myApp').service('Resource', ['$http', '$q', function ($http, $q)
 				return deferred.promise;
 			};
 
+		this.q = q;
+
 		this.get = function(additionalPath, routeParameters, config) {
 			return action('GET', routeParameters, additionalPath, undefined, config);
 		};

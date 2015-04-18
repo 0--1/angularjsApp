@@ -24,16 +24,11 @@
 
 		<!-- Add your site or application content here -->
 		<div class="appWrapper">
-			<div ng-show="isLoggedIn">
-				<ng-include src="'views/includes/navigation.html'"></ng-include>
+			<ng-include src="'views/includes/navigation.html'" ng-if="isLoggedIn"></ng-include>
 
-				<section ui-view></section>
+			<section ui-view></section>
 
-				<ng-include src="'views/includes/footer.html'"></ng-include>
-			</div>
-			<div ng-show="isLoggedOut">
-				<ng-include src="'views/includes/login.html'"></ng-include>
-			</div>
+			<ng-include src="'views/includes/footer.html'" ng-if="isLoggedIn"></ng-include>
 		</div>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
