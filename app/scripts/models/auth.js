@@ -9,7 +9,7 @@ angular.module('myApp').service('AuthModel', ['SERVER', 'CONFIG', 'Resource', '$
 		delete $cookies.uid;
 	};
 
-	this.login = function(username, password) {
+	this.signIn = function(username, password) {
 		var headers = {
 				AUTH_USER: username,
 				AUTH_PW: password
@@ -34,9 +34,10 @@ angular.module('myApp').service('AuthModel', ['SERVER', 'CONFIG', 'Resource', '$
 		);
 	};
 
-	this.logout = function() {
+	this.signOut = function() {
 		this.delete('logout', undefined, {}).then(function() {
 			removeAuthCookies();
+			location.href = location.href.replace(/#[-a-zA-Z0-9_#\/]+/,'login.html');
 		});
 	};
 }]);

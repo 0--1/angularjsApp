@@ -17,18 +17,27 @@
 		<link rel="stylesheet" href="styles/main.css">
 		<!-- endbuild -->
 	</head>
-	<body ng-app="myApp" ng-controller="MainCtrl">
-		<!--[if lt IE 7]>
-		  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-		  <![endif]-->
-
-		<!-- Add your site or application content here -->
-		<div class="appWrapper">
-			<ng-include src="'views/includes/navigation.html'" ng-if="isLoggedIn"></ng-include>
-
-			<section ui-view></section>
-
-			<ng-include src="'views/includes/footer.html'" ng-if="isLoggedIn"></ng-include>
+	<body ng-app="loginApp" ng-controller="LoginCtrl" ng-cloak>
+		<div class="login" layout="row" layout-align="center start" >
+			<form name="loginForm" layout="column" layout-align="center center" novalidate>
+				<div class="form-element">
+					<md-input-container>
+						<label>Email:</label>
+						<input type="email" name="email" ng-model="email" ng-minlength="6" ng-maxlength="128" ng-required>
+					</md-input-container>
+				</div>
+				<div class="form-element">
+					<md-input-container>
+						<label>Password:</label>
+						<input type="password" name="pass" ng-model="pass" ng-minlength="6" ng-maxlength="128" ng-required>
+					</md-input-container>
+				</div>
+				<div layout="row" layout-align="center center">
+					<md-button ng-hide="signingIn" ng-click="signin()" class="md-raised md-primary" ng-disabled="loginForm.$invalid || loginForm.email.$pristine || loginForm.pass.$pristine">Sign in</md-button>
+					<md-button ng-show="signingIn" ng-click="cancelSignin()">Cancel</md-button>
+					<md-progress-circular ng-show="signingIn" md-mode="indeterminate"></md-progress-circular>
+				</div>
+			</form>
 		</div>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -63,16 +72,11 @@
 		<!-- build:js({.tmp,app}) scripts/scripts.js -->
 		<script src="scripts/app.js"></script>
 		<script src="scripts/configurations/config.js"></script>
-		<script src="scripts/configurations/events.js"></script>
-		<script src="scripts/configurations/routes.js"></script>
 		<script src="scripts/configurations/server.js"></script>
 		<script src="scripts/services/resource.js"></script>
 		<script src="scripts/models/auth.js"></script>
 		<script src="scripts/models/user.js"></script>
-		<script src="scripts/controllers/home.js"></script>
 		<script src="scripts/controllers/login.js"></script>
-		<script src="scripts/controllers/main.js"></script>
-		<script src="scripts/controllers/navbar.js"></script>
 		<!-- endbuild -->
 	</body>
 </html>
