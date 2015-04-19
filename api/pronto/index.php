@@ -16,8 +16,6 @@ $data = json_decode(file_get_contents("php://input"), true);
 $db = new Database();
 $auth = new Authenticate($method, $db);
 
-error_log(implode($url), 0);
-
 if($auth->validateLogin()) {
 	if($url[0] === 'login' && !isset($url[1])) {
 		echo '{"status": "redirect"}';
