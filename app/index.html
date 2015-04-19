@@ -23,12 +23,12 @@
 		  <![endif]-->
 
 		<!-- Add your site or application content here -->
-		<div class="appWrapper">
-			<ng-include src="'views/includes/navigation.html'" ng-if="isLoggedIn"></ng-include>
-
+		<div class="appWrapper" ng-if="loggedIn()">
+			<md-sidenav md-component-id="left" class="md-sidenav-left">Left Nav!</md-sidenav>
+			<ng-include src="'views/includes/navigation.html'"></ng-include>
 			<section ui-view></section>
 
-			<ng-include src="'views/includes/footer.html'" ng-if="isLoggedIn"></ng-include>
+			<ng-include src="'views/includes/footer.html'"></ng-include>
 		</div>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->

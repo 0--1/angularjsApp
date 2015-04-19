@@ -8,14 +8,14 @@ angular.module('myApp')
 		if($cookies.uid) {
 			UserModel.getUser($cookies.uid).then(function(user) {
 				if(user.error) {
-					// $state.go('login');
+					location.href = location.href.replace(/#[-a-zA-Z0-9_#\/]+/,'') + 'login.html';
 				} else {
-					$scope.isLoggedIn = true;
+					$scope.loggedIn(true);
 					$state.go('home');
 				}
 			});
 		} else {
-			location.href = location.href.replace(/#[-a-zA-Z0-9_#\/]+/,'login.html');
+			location.href = location.href.replace(/#[-a-zA-Z0-9_#\/]+/,'') + 'login.html';
 		}
 	};
 
