@@ -9,10 +9,6 @@ header('Access-Control-Allow-Origin: http://localhost:9000');
 header("Access-Control-Allow-Credentials: true");
 header('Content-Type: application/json');
 
-// $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-// fwrite($myfile, json_encode($_COOKIE, JSON_PRETTY_PRINT));
-
-
 $url = explode('/', trim($_REQUEST['_url'], '/'));
 $method = strtolower($_SERVER['REQUEST_METHOD']);
 if(!in_array($method, $methods)) exit();
@@ -20,26 +16,24 @@ $data = json_decode(file_get_contents("php://input"), true);
 $db = new Database();
 $auth = new Authenticate($method, $db);
 
-if($url[0] !== 'pronto' && isset($url[1])) {
-	new Error('NOT_FOUND');
-} else {
-	if($auth->validateLogin()) {
-		if($url[1] === 'login' && !isset($url[2])) {
-			echo '{"status": "redirect"}';
-		} else if(array_key_exists($url[1], $apis)) {
-			$process = new $apis[$url[1]](array_slice($url, 2), $method, $data, $db);
-		} else {
-			new Error('NOT_FOUND');
-		}
-	} else if($url[1] === 'login' && !isset($url[2])) {
-		if($method == 'post') {
-			$auth->login($_SERVER['HTTP_AUTH_USER'], $_SERVER['HTTP_AUTH_PW']);
-		} else {
-			new Error('NOT_FOUND');
-		}
+error_log(implode($url), 0);
+
+if($auth->validateLogin()) {
+	if($url[0] === 'login' && !isset($url[1])) {
+		echo '{"status": "redirect"}';
+	} else if(array_key_exists($url[0], $apis)) {
+		$process = new $apis[$url[0]](array_slice($url, 1), $method, $data, $db);
 	} else {
-		new Error('UNAUTH', 'Invalid authentication');
+		new Error('NOT_FOUND');
 	}
+} else if(isset($url[0]) && $url[0] === 'login' && !isset($url[1])) {
+	if($method == 'post') {
+		$auth->login($_SERVER['HTTP_AUTH_USER'], $_SERVER['HTTP_AUTH_PW']);
+	} else {
+		new Error('NOT_FOUND');
+	}
+} else {
+	new Error('UNAUTH', 'Invalid authentication');
 }
 
 exit();

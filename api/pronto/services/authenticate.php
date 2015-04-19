@@ -15,6 +15,8 @@ class Authenticate {
 		$query = "SELECT user.user_id FROM user, auth_info WHERE user.user_id=auth_info.user_id AND email='$email' AND hash='" . hash('sha512', $pass) . "'";
 		$result = $this->db->execute($query);
 
+		error_log($result, 0);
+
 		if(isset($result[0]['user_id'])) {
 			$this->setKey($result[0]['user_id']);
 		} else {

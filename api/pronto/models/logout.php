@@ -14,7 +14,9 @@ class Logout {
 		$this->data = $_data;
 		$this->db = $_db;
 
-		if($this->method === 'delete' && !isset($url[0]) && isset($_COOKIE['user_id']) && isset($_COOKIE['ckey']) && isset($_COOKIE['hkey'])) {
+		// error_log($this->url[0]);
+
+		if($this->method === 'delete' && !isset($this->url[0]) && isset($_COOKIE['uid']) && isset($_COOKIE['ckey']) && isset($_COOKIE['hkey'])) {
 			$this->logout();
 		} else {
 			new Error('NOT_FOUND');
@@ -23,9 +25,9 @@ class Logout {
 	}
 
 	private function logout() {
-		$query = "INSERT INTO auth_log (user_id, ckey, timestamp, type) VALUES (".$_COOKIE['user_id'].", '".$_COOKIE['ckey']."', NOW(), 'o')";
+		$query = "INSERT INTO auth_log (user_id, ckey, timestamp, type) VALUES (".$_COOKIE['uid'].", '".$_COOKIE['ckey']."', NOW(), 'o')";
 		$result = $this->db->execute($query);
-		$query = "DELETE FROM $this->table WHERE user_id='".$_COOKIE['user_id']."' AND hkey='".$_COOKIE['hkey']."' AND ckey='".$_COOKIE['ckey']."'";
+		$query = "DELETE FROM $this->table WHERE user_id='".$_COOKIE['uid']."' AND hkey='".$_COOKIE['hkey']."' AND ckey='".$_COOKIE['ckey']."'";
 		$result = $this->db->execute($query);
 		unset($_COOKIE['ckey']);
 		setcookie('ckey', '', time()-3600);
