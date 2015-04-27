@@ -1,13 +1,14 @@
 'use strict';
 
-angular.module('myApp').service('AuthModel', ['SERVER', 'CONFIG', 'Resource', '$cookies', function(SERVER, CONFIG, Resource, $cookies) {
-	angular.extend(this, new Resource(SERVER.dev + CONFIG.api.root));
+angular.module('myApp').service('AuthModel', ['SERVER', 'APIS', 'Resource', '$rootScope', '$cookies', 'EVENTS',
+function(SERVER, APIS, Resource, $rootScope, $cookies, EVENTS) {
+	angular.extend(this, new Resource(SERVER.dev + APIS.root));
 
 	var removeAuthCookies = function() {
-		delete $cookies.ckey;
-		delete $cookies.hkey;
-		delete $cookies.uid;
-	};
+			delete $cookies.ckey;
+			delete $cookies.hkey;
+			delete $cookies.uid;
+		};
 
 	this.signIn = function(username, password) {
 		var headers = {
@@ -37,7 +38,7 @@ angular.module('myApp').service('AuthModel', ['SERVER', 'CONFIG', 'Resource', '$
 	this.signOut = function() {
 		this.delete('logout', undefined, {}).then(function() {
 			removeAuthCookies();
-			location.href = location.href.replace(/#[-a-zA-Z0-9_#\/]+/,'login.html');
+			$rootScope.$broadcast(EVENTS.signOut, {});
 		});
 	};
 }]);

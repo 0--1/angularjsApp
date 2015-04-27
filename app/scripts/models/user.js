@@ -1,9 +1,23 @@
 'use strict';
 
-angular.module('myApp').service('UserModel', ['SERVER', 'CONFIG', 'Resource', function(SERVER, CONFIG, Resource) {
-	angular.extend(this, new Resource(SERVER.dev + CONFIG.api.root + CONFIG.api.user));
+angular.module('myApp').service('UserModel', ['SERVER', 'APIS', 'Resource', function(SERVER, APIS, Resource) {
+	angular.extend(this, new Resource(SERVER.dev + APIS.root + APIS.user));
+	var currentUser = false;
 
-	this.getUser = function(userId) {
-		return this.get('', {userId: userId}).then(this.sendResponse, this.sendError);
+	this.getUser = function(userId, isCurrentUser) {
+		return this.get('', {userId: userId}).then(function(response) {
+			if(isCurrentUser) {
+				currentUser = response;
+			}
+			return response;
+		}, this.sendError);
+	};
+
+	this.getCurrentUser = function() {
+		return currentUser;
+	};
+
+	this.removeCurrentUser = function() {
+		currentUser = false;
 	};
 }]);
