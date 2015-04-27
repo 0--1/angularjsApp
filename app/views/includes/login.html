@@ -1,4 +1,4 @@
-<div class="login">
+<div class="login" layout="row" layout-align="center start" >
 	<form name="loginForm" layout="column" layout-align="center center" novalidate>
 		<div class="form-element">
 			<md-input-container>
@@ -12,7 +12,7 @@
 				<input type="password" name="pass" ng-model="pass" ng-minlength="6" ng-maxlength="128" ng-required>
 			</md-input-container>
 		</div>
-		<div layout="row">
+		<div layout="row" layout-align="center center">
 			<md-button ng-hide="signingIn" ng-click="signin()" class="md-raised md-primary" ng-disabled="loginForm.$invalid || loginForm.email.$pristine || loginForm.pass.$pristine">Sign in</md-button>
 			<md-button ng-show="signingIn" ng-click="cancelSignin()">Cancel</md-button>
 			<md-progress-circular ng-show="signingIn" md-mode="indeterminate"></md-progress-circular>

@@ -12,12 +12,12 @@ angular.module('myApp')
 		})
 		.state('home', {
 			url: '/',
-			templateUrl: 'views/home.html',
+			templateUrl: 'views/includes/home.html',
 			controller: 'HomeCtrl'
 		})
 		.state('login', {
 			url: '/login',
-			templateUrl: 'views/login.html',
+			templateUrl: 'views/includes/login.html',
 			controller: 'LoginCtrl'
 		});
 }]);
