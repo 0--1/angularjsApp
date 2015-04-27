@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('myApp').service('Application', [function () {
+angular.module('myApp').service('Application', ['$state', function ($state) {
 	var ready = false,
+		authenticated = false,
 		listeners = [],
 		callListeners = function() {
 			var i;
@@ -19,6 +20,17 @@ angular.module('myApp').service('Application', [function () {
 		ready = true;
 
 		callListeners();
+	};
+
+	this.isAuthenticated = function() {
+		return authenticated;
+	};
+
+	this.setAuthenticated = function(value) {
+		authenticated = !!value;
+		if(!value) {
+			$state.go('loading');
+		}
 	};
 
 	this.registerListener = function(callback) {

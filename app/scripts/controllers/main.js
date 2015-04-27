@@ -1,35 +1,30 @@
 'use strict';
 
 angular.module('myApp')
-.controller('MainCtrl', ['$scope', '$state', 'UserModel', '$cookies', function ($scope, $state, UserModel, $cookies) {
+.controller('MainCtrl', ['$scope', 'EVENTS', 'Application', 'UserModel', '$log', function ($scope, EVENTS, Application, UserModel, $log) {
 	var init = function() {
-		$scope.isLoggedIn = false;
-
-		if($cookies.uid) {
-			UserModel.getUser($cookies.uid).then(function(user) {
-				if(user.error) {
-					location.href = location.href.replace(/#[-a-zA-Z0-9_#\/]+/,'') + 'login.html';
-				} else {
-					$scope.loggedIn(true);
-					$state.go('home');
-				}
-			});
-		} else {
-			location.href = location.href.replace(/#[-a-zA-Z0-9_#\/]+/,'') + 'login.html';
-		}
+		$scope.currentUser = false;
+		$scope.$log = $log;
 	};
 
-	$scope.loggedIn = function(state) {
-		if(typeof state !== 'undefined') {
-			$scope.isLoggedIn = state;
-			if(!state) {
-				$state.go('login');
-			}
-		}
+	$scope.isAuthenticated = function() {
+		return Application.isAuthenticated();
+	};
 
-		return $scope.isLoggedIn;
+	$scope.isReady = function() {
+		return Application.isReady();
+	};
+
+	$scope.setUser = function(user) {
+		$scope.currentUser = user;
 	};
 
 	init();
+
+	$scope.$on(EVENTS.signOut, function() {
+		UserModel.removeCurrentUser();
+		$scope.setUser(false);
+		Application.setAuthenticated(false);
+	});
 	// AuthModel.login('behroozkamali@yahoo.com', 'kamali');
 }]);

@@ -1,8 +1,5 @@
 'use strict';
 
-angular.module('myApp').constant('CONFIG', {
-	api: {
-		root: '/api/pronto',
-		user: '/user/:userId'
-	}
-});
+angular.module('myApp').config(['$logProvider', function($logProvider) {
+	$logProvider.debugEnabled(true);
+}]);

@@ -1,29 +1,9 @@
 'use strict';
 
-angular.module('loginApp', [
-	'ngAnimate',
-	'ngCookies',
-	'ngResource',
-	'ngRoute',
-	'ngSanitize',
-	'ngTouch',
-	'ngMaterial',
-	'ui.router',
-	'ui.bootstrap',
-	'myApp'
-	])
-	.controller('LoginCtrl', ['$scope', 'AuthModel', '$cookies', 'UserModel', function ($scope, AuthModel, $cookies, UserModel) {
+angular.module('myApp')
+	.controller('LoginCtrl', ['$scope', '$state', 'AuthModel', 'Application', 'UserModel', function ($scope, $state, AuthModel, Application, UserModel) {
 		var init = function() {
 			$scope.signingIn = false;
-
-			if($cookies.uid) {
-				UserModel.getUser($cookies.uid).then(function(user) {
-					if(!user.error) {
-						$scope.isLoggedIn = true;
-						location.href = location.href.replace(/login.html/,'');
-					}
-				});
-			}
 		};
 
 		$scope.signin = function() {
@@ -32,7 +12,11 @@ angular.module('loginApp', [
 				if(response.code === '401') {
 					$scope.signingIn = false;
 				} else {
-					location.href = location.href.replace(/login.html/,'');
+					UserModel.getUser(response.uid, true).then(function(user) {
+						$scope.setUser(user);
+						Application.setAuthenticated(true);
+						$state.go('home');
+					});
 				}
 			});
 		};

@@ -23,7 +23,6 @@ angular.module('myApp').service('RouteFilter', ['$state', function ($state) {
 	};
 
 	this.register = function(name, routes, callback, redirectRoute) {
-		// redirectRoute = typeof redirectRoute !=='undefined' ? redirectRoute : null;
 		redirectRoute = redirectRoute || false;
 
 		filters.push({
@@ -34,11 +33,12 @@ angular.module('myApp').service('RouteFilter', ['$state', function ($state) {
 		});
 	};
 
-	this.run = function(route) {
+	this.run = function(route, event) {
 		var filter = getFilter(route);
 
 		if(!!filter && !!filter.redirectRoute) {
 			if(!filter.callback()) {
+				event.preventDefault();
 				$state.go(filter.redirectRoute);
 			}
 		}
