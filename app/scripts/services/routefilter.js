@@ -36,9 +36,9 @@ angular.module('myApp').service('RouteFilter', ['$state', function ($state) {
 	this.run = function(route, event) {
 		var filter = getFilter(route);
 
-		if(!!filter && !!filter.redirectRoute) {
-			if(!filter.callback()) {
-				event.preventDefault();
+		if(!!filter && !filter.callback()) {
+			event.preventDefault();
+			if(!!filter.redirectRoute) {
 				$state.go(filter.redirectRoute);
 			}
 		}

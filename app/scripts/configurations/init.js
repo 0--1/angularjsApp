@@ -4,19 +4,27 @@ angular.module('myApp').run(['$rootScope', '$state', 'Application', 'RouteFilter
 function($rootScope, $state, Application, RouteFilter) {
 	RouteFilter.register('authorized', ['login'], function() {
 		return !Application.isAuthenticated();
-	}, 'home');
+	});
 
 	RouteFilter.register('unauthorized', ['home'], function() {
 		return Application.isAuthenticated();
 	}, 'login');
 
-	$rootScope.$on('$stateChangeStart', function(event, toState) {
-		if(toState.name === 'loading') {
+	RouteFilter.register('noLoadingWhenReady', ['loading'], function() {
+		return !Application.isAuthenticated();
+	}, 'home');
+
+	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState) {
+		console.log(fromState.name + '->' + toState.name);
+		if(toState.name === 'loading' && fromState.name === '') {
 			return;
 		}
 
 		if(!Application.isReady()) {
 			event.preventDefault();
+			Application.registerListener(function() {
+				$state.go(toState.name === 'login' ? 'home' : toState.name);
+			});
 			$state.go('loading');
 			return;
 		}

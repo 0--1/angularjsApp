@@ -5,10 +5,8 @@ angular.module('myApp').service('Application', ['$state', function ($state) {
 		authenticated = false,
 		listeners = [],
 		callListeners = function() {
-			var i;
-
-			for(i = 0; i < listeners.length; i++) {
-				listeners[i]();
+			while(listeners.length > 0) {
+				listeners.shift()();
 			}
 		};
 
@@ -18,23 +16,24 @@ angular.module('myApp').service('Application', ['$state', function ($state) {
 
 	this.makeReady = function() {
 		ready = true;
-
-		callListeners();
 	};
 
 	this.isAuthenticated = function() {
 		return authenticated;
 	};
 
-	this.setAuthenticated = function(value) {
-		authenticated = !!value;
-		if(!value) {
+	this.setAuthenticated = function(authStatus) {
+		authenticated = !!authStatus;
+		
+		if(authStatus) {
+			callListeners();
+		} else {
 			$state.go('loading');
 		}
 	};
 
 	this.registerListener = function(callback) {
-		if(ready) {
+		if(authenticated) {
 			callback();
 		} else {
 			listeners.push(callback);

@@ -13,7 +13,6 @@ function ($scope, $state, UserModel, $cookies, Application) {
 				} else {
 					$scope.setUser(user);
 					Application.setAuthenticated(true);
-					$state.go('home');
 				}
 			});
 		} else {

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('myApp')
-.controller('MainCtrl', ['$scope', 'EVENTS', 'Application', 'UserModel', '$log', function ($scope, EVENTS, Application, UserModel, $log) {
+.controller('MainCtrl', ['$scope', 'EVENTS', 'Application', 'UserModel', '$state', '$log',
+function ($scope, EVENTS, Application, UserModel, $state, $log) {
 	var init = function() {
 		$scope.currentUser = false;
 		$scope.$log = $log;
@@ -25,6 +26,9 @@ angular.module('myApp')
 		UserModel.removeCurrentUser();
 		$scope.setUser(false);
 		Application.setAuthenticated(false);
+		Application.registerListener(function() {
+			$state.go('home');
+		});
 	});
 	// AuthModel.login('behroozkamali@yahoo.com', 'kamali');
 }]);

@@ -15,7 +15,6 @@ angular.module('myApp')
 					UserModel.getUser(response.uid, true).then(function(user) {
 						$scope.setUser(user);
 						Application.setAuthenticated(true);
-						$state.go('home');
 					});
 				}
 			});
