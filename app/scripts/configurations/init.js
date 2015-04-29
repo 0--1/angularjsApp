@@ -2,15 +2,15 @@
 
 angular.module('myApp').run(['$rootScope', '$state', 'Application', 'RouteFilter',
 function($rootScope, $state, Application, RouteFilter) {
-	RouteFilter.register('authorized', ['login'], function() {
+	RouteFilter.register('login', 'authorized', 'You are already logged in.', function() {
 		return !Application.isAuthenticated();
 	});
 
-	RouteFilter.register('unauthorized', ['home'], function() {
+	RouteFilter.register(['home'], 'unauthorized', 'You are not authorized to visit this page!', function() {
 		return Application.isAuthenticated();
 	}, 'login');
 
-	RouteFilter.register('noLoadingWhenReady', ['loading'], function() {
+	RouteFilter.register('loading', 'noLoadingWhenReady', 'The application has already been loaded.', function() {
 		return !Application.isAuthenticated();
 	}, 'home');
 

@@ -1,46 +1,57 @@
 'use strict';
 
 angular.module('myApp').service('RouteFilter', ['$state', function ($state) {
-	var filters = [],
-		getFilter = function(route) {
-			var i, j;
-
-			for(i = 0; i < filters.length; i++) {
-				for(j = 0; j < filters[i].routes.length; j++) {
-					if(filters[i].routes[j] === route) {
-						return filters[i];
-					}
-				}
-			}
-
-			return false;
+	var filters = {},
+		addFilter = function(route, name, message, callback, redirectRoute) {
+			filters[route] = filters[route] || [];
+			filters[route].push({
+				name: name,
+				message: message,
+				callback: callback,
+				redirectRoute: redirectRoute || false
+			});
 		};
 
 	this.canAccess = function(route) {
-		var filter = getFilter(route);
+		if(!filters[route]) {
+			return true;
+		}
 
-		return filter.callback();
-	};
-
-	this.register = function(name, routes, callback, redirectRoute) {
-		redirectRoute = redirectRoute || false;
-
-		filters.push({
-			name: name,
-			routes: routes,
-			callback: callback,
-			redirectRoute: redirectRoute
+		return filters[route].every(function(filter) {
+			return filter.callback();
 		});
 	};
 
-	this.run = function(route, event) {
-		var filter = getFilter(route);
+	this.register = function(routes, name, message, callback, redirectRoute) {
+		var i;
 
-		if(!!filter && !filter.callback()) {
-			event.preventDefault();
-			if(!!filter.redirectRoute) {
-				$state.go(filter.redirectRoute);
-			}
+		if(typeof callback === 'undefined') {
+			return;
 		}
+
+		if(angular.isArray(routes)) {
+			for(i = 0; i < routes.length; i++) {
+				addFilter(routes[i], name, message, callback, redirectRoute);
+			}
+		} else {
+			addFilter(routes, name, message, callback, redirectRoute);
+		}
+	};
+
+	this.run = function(route, event) {
+		if(!filters[route]) {
+			return true;
+		}
+
+		filters[route].every(function(filter) {
+			if(!filter.callback()) {
+				event.preventDefault();
+				console.warn(filter.message);
+				if(filter.redirectRoute) {
+					$state.go(filter.redirectRoute);
+				}
+			}
+			return true;
+		});
 	};
 }]);
